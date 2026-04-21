@@ -29,7 +29,12 @@ public:
      *  The end of the container to copy elements from
      */
     template <typename Iter>
-    polynomial(Iter begin, Iter end);
+    polynomial(Iter begin, Iter end) {
+        for (auto it = begin; it != end; ++it) {
+            internal_terms.push_back(*it);
+        }
+        normalize();
+    }
 
     /**
      * @brief Construct a new polynomial object from an existing polynomial object
@@ -76,6 +81,15 @@ public:
      * Modulo (%) should support
      * 1. polynomial % polynomial
      */
+    polynomial operator+(const polynomial &other) const;
+    polynomial operator+(int constant) const;
+    friend polynomial operator+(int constant, const polynomial &poly);
+
+    polynomial operator*(const polynomial &other) const;
+    polynomial operator*(int constant) const;
+    friend polynomial operator*(int constant, const polynomial &poly);
+
+    polynomial operator%(const polynomial &other) const; 
     
 
     /**
@@ -107,6 +121,13 @@ public:
      *  A vector of pairs representing the canonical form of the polynomial
      */
     std::vector<std::pair<power, coeff>> canonical_form() const;
+
+    private:
+        // Internal storage for polynomial terms
+        std::vector<std::pair<power, coeff>> internal_terms;
+        
+        // Helper to keep the polynomial in a clean, sorted state
+        void normalize();
 };
 
 #endif
