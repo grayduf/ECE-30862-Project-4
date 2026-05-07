@@ -4,6 +4,7 @@
 #include <vector>
 #include <utility>
 #include <cstddef>
+#include <pthread.h>
 
 using power = size_t;
 using coeff = int;
@@ -125,6 +126,8 @@ public:
     private:
         // Internal storage for polynomial terms
         std::vector<std::pair<power, coeff>> internal_terms;
+
+        pthread_mutex_t result_mutex;
         
         // Helper to keep the polynomial in a clean, sorted state
         void normalize();
@@ -134,10 +137,11 @@ public:
             const std::vector<std::pair<power, coeff>>* p2;
             size_t start;
             size_t end;
-            std::vector<std::pair<power, coeff>> partial_result;
+            std::vector<std::pair<power, coeff>> partial_vec;
+            std::vector<coeff> local_accumulator; 
         };
 
-        static void* multiply_worker(void* arg);
+        static void* multiply_worker_hybrid(void* arg);
 };
 
 #endif
