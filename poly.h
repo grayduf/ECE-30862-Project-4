@@ -128,6 +128,16 @@ public:
         
         // Helper to keep the polynomial in a clean, sorted state
         void normalize();
+
+        struct ThreadArgs {
+            const std::vector<std::pair<power, coeff>>* p1;
+            const std::vector<std::pair<power, coeff>>* p2;
+            size_t start;
+            size_t end;
+            std::vector<std::pair<power, coeff>> partial_result;
+        };
+
+        static void* multiply_worker(void* arg);
 };
 
 #endif
